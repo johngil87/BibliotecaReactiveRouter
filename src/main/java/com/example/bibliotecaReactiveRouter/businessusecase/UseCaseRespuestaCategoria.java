@@ -34,7 +34,6 @@ public class UseCaseRespuestaCategoria {
         var recurso = repositorio.findRecursoByidCategoria(nombreCategoria.map(Categoria::getId));
         var recursoDTO = recurso.map(recursoMapper.fromCollection());
         var fsd =  recursoDTO.buffer();
-        var nombre = nombreCategoria.flatMap()
         return fsd.map(respuestaCategoriaMapper.recursoToRespuesta(nombreCategoria.map(Categoria::getDescripcion)));
     }
 }

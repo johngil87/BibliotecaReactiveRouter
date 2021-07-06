@@ -4,6 +4,7 @@ package com.example.bibliotecaReactiveRouter.useCase;
 import com.example.bibliotecaReactiveRouter.DTOs.RecursoDTO;
 import com.example.bibliotecaReactiveRouter.mapper.RecursoMapper;
 import com.example.bibliotecaReactiveRouter.repository.RecursoRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
@@ -15,6 +16,7 @@ public class UseCaseConsultarRecursoId {
     private final RecursoRepositorio repositorio;
     private RecursoMapper recursoMapper = new RecursoMapper();
 
+    @Autowired
     public UseCaseConsultarRecursoId(RecursoRepositorio repositorio) {
         this.repositorio = repositorio;
     }

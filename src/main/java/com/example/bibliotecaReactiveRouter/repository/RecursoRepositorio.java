@@ -9,4 +9,5 @@ public interface RecursoRepositorio extends ReactiveMongoRepository<Recurso, Str
 
     Mono<Recurso> findRecursoBytitulo(String titulo);
     Flux<Recurso> findRecursoByidCategoria(Mono<String> id);
+
 }

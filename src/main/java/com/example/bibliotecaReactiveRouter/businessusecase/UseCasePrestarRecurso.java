@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Validated
@@ -31,18 +31,17 @@ public class UseCasePrestarRecurso {
     }
 
     public Mono<RespuestaDTO> prestarRecurso(String nombre) {
-        var resultado = repositorio.findRecursoBytitulo(nombre).map(it -> {
-            if (it.isDisponible()) {
-                it.setDisponible(false);
-                it.setFecha(objSDF.format(objDate));
+
+        var resultado = repositorio.findById(nombre);
+        var editarResultado = resultado.flatMap(repuesta-> {
+            if(repuesta.isDisponible()){
+                repuesta.setDisponible(false);
+                repuesta.setFecha(objSDF.format(objDate));
             }
-            return it;
+            return repositorio.save(repuesta);
         });
-
-        return resultado.map(recursoMapper.fromCollection()).map(respuestaMapper.fromPrestarRecurso());
+        var bole = resultado.map(Recurso::isDisponible);
+        return editarResultado.map(recursoMapper.fromCollection()).map(edit1-> respuestaMapper.fromPrestarRecurso().apply(edit1,bole));
     }
 
-    private void guardarRecurso(Recurso recurso) {
-        repositorio.save(recurso);
-    }
 }

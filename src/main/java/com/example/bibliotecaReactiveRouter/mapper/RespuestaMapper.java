@@ -6,10 +6,12 @@ import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class RespuestaMapper {
 
+    private String mensajeP = "";
     private Date objDate = new Date();
     private String strDateFormat = "hh: mm: ss a dd-MMM-aaaa";
     private SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
@@ -26,17 +28,14 @@ public class RespuestaMapper {
         };
     }
 
-    public Function<RecursoDTO, RespuestaDTO> fromPrestarRecurso(){
-        return recurso -> {
+    public BiFunction<RecursoDTO, Mono<Boolean>, RespuestaDTO> fromPrestarRecurso(){
+        return (recurso,bole) -> {
             RespuestaDTO respuesta = new RespuestaDTO();
-            String mensaje = recurso.isDisponibleRecurso()?"Acabas de obtener el Libro" : "El libro no esta disponible para ser prestado";
-            respuesta.setMensaje(mensaje);
+            respuesta.setMensaje(this.mensajeP);
             respuesta.setEstado(recurso.isDisponibleRecurso());
             respuesta.setNombre(recurso.getTituloRecurso());
-            respuesta.setFecha(objSDF.format(objDate));
+            respuesta.setFecha(recurso.getFechaPrestamo());
             return respuesta;
-
         };
     }
-
 }
